@@ -1,0 +1,5 @@
+export const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const totalQuote=q=>Math.round(q.quantity*q.unit_price*100)/100;
+export const money=v=>new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN'}).format(v||0);
+export function csv(rows){if(!rows.length)return '';const keys=Object.keys(rows[0]);const cell=v=>'"'+String(v??'').replace(/^[=+@\-\t\r]/,"'$&").replaceAll('"','""')+'"';return '\ufeff'+[keys,...rows.map(r=>keys.map(k=>r[k]))].map(r=>r.map(cell).join(',')).join('\r\n');}
+export function validate(kind,row){if(kind==='products'&&(!row.name?.trim()||!row.sku?.trim()||!Number.isInteger(row.stock)||row.stock<0||!Number.isFinite(row.price)||row.price<0))throw Error('Completa nombre y código; stock entero y precio no negativos.');if(kind==='clients'&&!row.name?.trim())throw Error('Ingresa un nombre.');if(kind==='quotes'&&(!row.client_id||!row.product_id||!Number.isInteger(row.quantity)||row.quantity<1||!Number.isFinite(row.unit_price)||row.unit_price<0))throw Error('Selecciona cliente y producto; cantidad entera positiva y precio válido.');return row;}
